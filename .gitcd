@@ -1,0 +1,6 @@
+feature: feature/
+master: master
+tag: v
+test: develop/
+versionScheme: '%Y.%m.%d%H%M'
+versionType: date
