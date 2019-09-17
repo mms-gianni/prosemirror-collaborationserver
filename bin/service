@@ -1,0 +1,81 @@
+#!/bin/bash
+cd $(dirname $0)/..
+
+NODEDOCKERTAG=12.10-alpin
+
+function start {
+
+    # start tiptapsocketserver app container
+    docker run -d \
+        -p 3000:3000 \
+        -v $(pwd):/app \
+        -w /app \
+        --name=tiptapsocketserver node:12.10-alpine npm run start-dev
+}
+
+function stop {
+    # destroy tiptapsocketserver container
+    docker rm -f tiptapsocketserver
+}
+
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  status)
+    # call docker ps
+    docker ps -a
+    ;;
+  restart)
+    stop
+    start
+    ;;
+  update)
+    # pull tiptapsocketserver app container
+    docker pull node:$NODEDOCKERTAG
+    ;;
+  npm-install)
+    # make an npm install to get a working application code
+    docker run --rm \
+        -v $(pwd):/app \
+        -w /app \
+        -t \
+        node:$NODEDOCKERTAG npm install
+    ;;
+  npm-update)
+    # make an npm install to get a working application code
+    docker run --rm \
+        -v $(pwd):/app \
+        -w /app \
+        -t \
+        node:$NODEDOCKERTAG npm update
+    ;;  
+  lint)
+    docker run --rm \
+        -v $(pwd):/app \
+        -w /app \
+        -t \
+        node:$NODEDOCKERTAG npm run lint
+    ;;
+  lint-fix)
+    docker run --rm \
+        -v $(pwd):/app \
+        -w /app \
+        -t \
+        node:$NODEDOCKERTAG npm run lint-fix
+    ;;  
+  exec)
+    [ -z "$2" ] || docker exec -it tiptapsocketserver $2;
+    ;;
+  log)
+    docker logs -f tiptapsocketserver
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status|update|npm-install|npm-update|lint|log|exec}" >&2
+    exit 1
+    ;;
+esac

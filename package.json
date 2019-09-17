@@ -1,0 +1,27 @@
+{
+  "name": "tiptap-socketserver",
+  "version": "0.0.1",
+  "description": "Socket backend to tiptap editor",
+  "main": "index.js",
+  "author": "Gianni Carafa <gicara@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": "12.x",
+    "npm": "6.x"
+  },
+  "dependencies": {
+    "prosemirror-model": "^1.7.2",
+    "prosemirror-transform": "^1.1.4",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.3.0",
+    "nodemon": "^1.19.2"
+  },
+  "scripts": {
+    "start": "node --harmony index.js",
+    "start-dev": "/app/node_modules/.bin/nodemon /app/index.js",
+    "lint": "eslint --ext js ./",
+    "lint-fix": "eslint --fix --ext js ./"
+  }
+}
