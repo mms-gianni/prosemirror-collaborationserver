@@ -15,19 +15,7 @@ var events = function(socket) {
 
     socket.on('update', async ({ version, clientID, steps, cursor}) => {
         var storedData = DocController.getDoc(nspName)
-
-        // load and update decortaions for the cursor
-/*        
-        const cursorDecorations = DecorationsController.getDecoration(nspName)
-        cursorDecorations[socket.id] = {
-            'clientID': socket.id, 
-            'cursor': cursor, 
-            'focused': focused, 
-            'displayname': displayname, 
-            'displaycolor': displaycolor
-        } 
-        DecorationsController.storeDecoration(cursorDecorations, nspName)
-*/        
+       
         const cursorDecorations = {}
 
         // version mismatch: the stored version is newer
@@ -106,11 +94,7 @@ var events = function(socket) {
 
     socket.emit('init', DocController.getDoc(nspName))
 
-/*
-    // submit initial position of Decorations
-    var cursorDecorations = DecorationsController.getDecoration(nspName)
-    socket.emit('cursorupdate', cursorDecorations)
-*/
+
     socket.nsp.emit('getCount', socket.server.engine.clientsCount) 
 
 }
