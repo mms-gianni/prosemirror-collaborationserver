@@ -1,0 +1,33 @@
+version: '3'
+
+networks:
+  frontend:
+    driver: ${NETWORKS_DRIVER}
+  backend:
+    driver: ${NETWORKS_DRIVER}
+
+services:
+    tiptapsocketserver:
+      container_name: tiptapsocket
+      image: node:12.10-alpine
+      command: npm run start-dev
+      working_dir: /app
+      volumes:
+        - ./:/app
+      ports:
+        - "${SOCKETPORT}:3000"
+      tty: true
+      networks:
+        - frontend
+        - backend
+
+    mongo:
+      container_name: mongo
+      image: mongo:latest
+      command: mongod
+      ports:
+        - "${MONGODB_PORT}:27017"
+      volumes:
+        - ${DATA_PATH_HOST}/mongo:/data/db
+      networks:
+        - backend
