@@ -1,8 +1,7 @@
 
-
+let allowedOrigins = process.env.ALLOWEDORIGINS || '*:*'
 let port = process.env.PORT || 3000
 let docPath = '/tmp'
-let stepsPath = '/tmp'
 let maxStoredSteps = process.env.MAXSTOREDSTEPS || 1000
 let defaultData = {
   "version": 0,
@@ -12,9 +11,9 @@ let defaultData = {
 const config = {
 	"port": port,
 	"docPath": docPath,
-	"stepsPath": stepsPath,
 	"maxStoredSteps": maxStoredSteps,
 	"defaultData": defaultData,
+	'allowedOrigins': allowedOrigins,
 }
 
 module.exports = config;
