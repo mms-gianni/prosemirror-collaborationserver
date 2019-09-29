@@ -1,10 +1,12 @@
 'use strict';
 
-const docController = require('../controllers/doc.js')
-const stepController = require('../controllers/step.js')
-const decorationsController = require('../controllers/decorations.js')
-const schema = require('../../schema.js')
+const DocController = require('../controllers/doc.js')
+const StepController = require('../controllers/step.js')
+const DecorationsController = require('../controllers/decorations.js')
+const Schema = require('../schemas/schema.js')
 const Step = require('prosemirror-transform').Step
+const axios = require("axios");
+const config = require('../../config.js')
 
 
 var events = function(socket) {
@@ -12,39 +14,45 @@ var events = function(socket) {
     console.log("Namespace: "+nspName)
 
     socket.on('update', async ({ version, clientID, steps, cursor}) => {
-        var storedData = docController.getDoc(nspName)
+        var storedData = DocController.getDoc(nspName)
 
         // load and update decortaions for the cursor
-        /*
-        const CursorDecorations = decorationsController.getDecoration(nspName)
-        CursorDecorations[clientID] = {'position': cursor, 'clientID': clientID} 
-        decorationsController.storeDecoration(CursorDecorations, nspName)
-        */
-        const CursorDecorations = {}
+/*        
+        const cursorDecorations = DecorationsController.getDecoration(nspName)
+        cursorDecorations[socket.id] = {
+            'clientID': socket.id, 
+            'cursor': cursor, 
+            'focused': focused, 
+            'displayname': displayname, 
+            'displaycolor': displaycolor
+        } 
+        DecorationsController.storeDecoration(cursorDecorations, nspName)
+*/        
+        const cursorDecorations = {}
 
         // version mismatch: the stored version is newer
         // so we send all steps of this version back to the user
         if (storedData.version !== version) {
-          socket.emit('update', {
-            version,
-            steps: stepController.getSteps(version),
-            decorations: CursorDecorations,
-            clientID: clientID
-          })
+            socket.emit('update', {
+                version,
+                steps: StepController.getSteps(version, nspName),
+                decorations: cursorDecorations,
+                clientID: socket.id
+            })
           return
         }
 
-        let doc = schema.nodeFromJSON(storedData.doc)
+        let doc = Schema.nodeFromJSON(storedData.doc)
 
         let newSteps = steps.map(step => {
-          const newStep = Step.fromJSON(schema, step)
-          newStep.clientID = clientID
+            const newStep = Step.fromJSON(Schema, step)
+            newStep.clientID = socket.id
 
-          // apply step to document
-          let result = newStep.apply(doc)
-          doc = result.doc
+            // apply step to document
+            let result = newStep.apply(doc)
+            doc = result.doc
 
-          return newStep
+            return newStep
         })
 
         // calculating a new version number is easy
@@ -52,15 +60,15 @@ var events = function(socket) {
 
 
         // store data
-        stepController.storeSteps({ version, steps: newSteps })
-        docController.storeDoc({ version: newVersion, doc }, nspName)
+        StepController.storeSteps({ version, steps: newSteps }, nspName)
+        DocController.storeDoc({ version: newVersion, doc }, nspName)
 
         // send update to everyone (me and others)
         socket.nsp.emit('update', {
             version: newVersion,
-            steps: stepController.getSteps(version),
-            decorations: CursorDecorations,
-            clientID: clientID
+            steps: StepController.getSteps(version, nspName),
+            decorations: cursorDecorations,
+            clientID: socket.id
         })
         
         return
@@ -70,33 +78,39 @@ var events = function(socket) {
         console.log('main.disconnect')
         socket.nsp.emit('getCount', socket.server.engine.clientsCount) 
 
-        const CursorDecorations = decorationsController.getDecoration(nspName)
-        delete CursorDecorations[socket.id] 
-        socket.nsp.emit('cursorupdate', CursorDecorations) 
-        decorationsController.storeDecoration(CursorDecorations, nspName)
+        // delete Cursor, since user is not connected
+        const cursorDecorations = DecorationsController.getDecoration(nspName)
+        delete cursorDecorations[socket.id] 
+        socket.nsp.emit('cursorupdate', cursorDecorations) 
+        DecorationsController.storeDecoration(cursorDecorations, nspName)
+
+        return
     })
 
-    socket.on('cursorchange', async ({ clientID, cursor, focused}) => {
+    // Update collaborators about your cursor postition
+    socket.on('cursorchange', async ({ cursor, focused, displayname, displaycolor }) => {
         console.log('main.cursorchange')
-        const CursorDecorations = decorationsController.getDecoration(nspName)
-        CursorDecorations[clientID] = {'clientID': clientID, 'cursor': cursor, 'focused': focused} 
-        socket.nsp.emit('cursorupdate', CursorDecorations) 
-        decorationsController.storeDecoration(CursorDecorations, nspName)
+        const cursorDecorations = DecorationsController.getDecoration(nspName)
+        cursorDecorations[socket.id] = {
+            'clientID': socket.id, 
+            'cursor': cursor, 
+            'focused': focused, 
+            'displayname': displayname, 
+            'displaycolor': displaycolor
+        } 
+        socket.nsp.emit('cursorupdate', cursorDecorations) 
+        DecorationsController.storeDecoration(cursorDecorations, nspName)
+
+        return
     })
 
-    socket.on('cursorremove', async ({ clientID}) => {
-        console.log('main.cursorremove'+clientID)
-        const CursorDecorations = decorationsController.getDecoration(nspName)
-        delete CursorDecorations[clientID] 
-        socket.nsp.emit('cursorupdate', CursorDecorations) 
-        decorationsController.storeDecoration(CursorDecorations, nspName)
-    })
+    socket.emit('init', DocController.getDoc(nspName))
 
-    socket.emit('init', docController.getDoc(nspName), decorationsController.getDecoration(nspName))
-
-    var CursorDecorations = decorationsController.getDecoration(nspName)
-    socket.emit('cursorupdate', CursorDecorations)
-
+/*
+    // submit initial position of Decorations
+    var cursorDecorations = DecorationsController.getDecoration(nspName)
+    socket.emit('cursorupdate', cursorDecorations)
+*/
     socket.nsp.emit('getCount', socket.server.engine.clientsCount) 
 
 }
