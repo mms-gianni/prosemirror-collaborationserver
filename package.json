@@ -4,7 +4,7 @@
   "description": "Socket backend to tiptap editor",
   "main": "index.js",
   "author": "Gianni Carafa <gicara@gmail.com>",
-  "license": "MIT",
+  "license": "GPLv3",
   "engines": {
     "node": "12.x",
     "npm": "6.x"
