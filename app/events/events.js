@@ -5,7 +5,6 @@ const StepController = require('../controllers/step.js')
 const DecorationsController = require('../controllers/decorations.js')
 const Schema = require('../schemas/schema.js')
 const Step = require('prosemirror-transform').Step
-const axios = require("axios");
 const config = require('../../config.js')
 
 
