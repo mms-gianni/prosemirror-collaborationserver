@@ -5,7 +5,7 @@ This socket server manages your collaboration communication between your editors
 It handles multiple documents in parallel and shows also your participants position. It's all ready to run in a Docker instance. 
 
 
-![screencapture](https://github.com/mms-gianni/tiptap-collaborationserver/raw/master/doc/tiptap.gif "Logo Title Text 1")
+![screencapture](https://github.com/mms-gianni/tiptap-collaborationserver/raw/master/doc/tiptap_big.gif "Logo Title Text 1")
 
 ## Requirements  
 - Tiptap rich texteditor (https://tiptap.scrumpy.io)
