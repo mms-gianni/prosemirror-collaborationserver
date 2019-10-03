@@ -7,6 +7,8 @@ It handles multiple documents in parallel and shows also your participants posit
 
 ![screencapture](https://github.com/mms-gianni/tiptap-collaborationserver/raw/master/doc/tiptap_big.gif "Logo Title Text 1")
 
+See full video here : https://www.youtube.com/watch?v=wNdEUkifCao 
+
 ## Requirements  
 - Tiptap rich texteditor (https://tiptap.scrumpy.io)
 - Tiptap collaboration module (https://tiptap.scrumpy.io/collaboration)
