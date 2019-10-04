@@ -8,7 +8,7 @@
     <template v-if="editor && !loading">
       <div class="user-list">
         <div v-for="participant in participants" class="user-block">
-          <img class="img-circle img-bordered-sm" src="https://randomuser.me/api/portraits/men/17.jpg" alt="user image" :style="{ border: '2px solid '+participant.displaycolor}">
+          <img class="img-circle img-bordered-sm" :src="participant.thumbnail" alt="user image" :style="{ border: '2px solid '+participant.displaycolor}">'+participant.displaycolor}">
             <span class="username">
                 <a href="#">{{participant.displayname}}</a>
             </span>
@@ -38,6 +38,7 @@ import {
   History,
   Collaboration,
 } from 'tiptap-extensions'
+// Participants is not a part of tiptap and you have to import it separatly
 import Participants from '../extensions/Participants.js'
 
 export default {
@@ -69,13 +70,20 @@ export default {
           new Italic(),
           new History(),
 
-          // Participants is currently not a part of tiptap and you have to import it separatly
+          // Participants is not a part of tiptap and you have to import it separatly
           new Participants({
             socket: this.socket,
-            displayname: document.querySelector('meta[name="userName"]').getAttribute('content'),
-            displaycolor: this.getDisplaycolor(this.socket.id),
-            //displaycolor: this.getDisplaycolor(document.querySelector('meta[name="userName"]').getAttribute('content')),
-            //displaycolor: '#555',
+
+            /*  
+            // if you initialy know who you are fill it here
+            me: {
+              //-- reuquired Fields -----------------------//
+              displayname: document.querySelector('meta[name="userName"]').getAttribute('content'),
+              displaycolor: this.getDisplaycolor(this.socket.id),
+              //-- custom Fields --------------------------//
+            },
+            */
+
           }),
           new Collaboration({
 
@@ -118,6 +126,20 @@ export default {
     },
   },
   mounted() {
+
+    axios
+      .get('https://randomuser.me/api/')
+      .then(response => {
+        let me = {
+          //-- required Fields ------------------------//
+          displayname: response.data.results[0].name.first+" "+response.data.results[0].name.last,
+          displaycolor: this.getDisplaycolor(this.socket.id),
+          //-- custom Fields --------------------------//
+          thumbnail: response.data.results[0].picture.thumbnail
+        }
+        this.editor.extensions.options.participants.me = me
+        this.socket.emit("cursorchange", me)
+      })
 
     // use a dynamic path here for yout namespaced document communication instad of "dynamic-99"
     this.socket = io('ws://localhost:3000/dynamic-99') 
