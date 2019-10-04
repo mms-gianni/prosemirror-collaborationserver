@@ -75,22 +75,17 @@ var events = function(socket) {
     })
 
     // Update collaborators about your cursor postition
-    socket.on('cursorchange', async ({ cursor, focused, displayname, displaycolor }) => {
+    socket.on('cursorchange', async (participant) => {
         console.log('main.cursorchange')
         const cursorDecorations = DecorationsController.getDecoration(nspName)
-        cursorDecorations[socket.id] = {
-            'clientID': socket.id, 
-            'cursor': cursor, 
-            'focused': focused, 
-            'displayname': displayname, 
-            'displaycolor': displaycolor
-        } 
-        socket.nsp.emit('cursorupdate', cursorDecorations) 
+        cursorDecorations[socket.id] = participant
+        cursorDecorations[socket.id]['clientID'] = socket.id
+        socket.nsp.emit('cursorupdate', cursorDecorations)
         DecorationsController.storeDecoration(cursorDecorations, nspName)
 
         return
     })
-
+    
     socket.emit('init', DocController.getDoc(nspName))
 
 
