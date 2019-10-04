@@ -6,4 +6,4 @@ var events = require('./app/events/events.js')
 const server = io.listen(config.port);
 server.origins(config.allowedOrigins);
 
-server.of(/^\/dynamic-\d+$/).on("connection", events)
+server.of(/^\/doc-\d+$/).on("connection", events)

@@ -127,6 +127,7 @@ export default {
   },
   mounted() {
 
+    // load some random user data 
     axios
       .get('https://randomuser.me/api/')
       .then(response => {
@@ -141,8 +142,8 @@ export default {
         this.socket.emit("cursorchange", me)
       })
 
-    // use a dynamic path here for yout namespaced document communication instad of "dynamic-99"
-    this.socket = io('ws://localhost:3000/dynamic-99') 
+    // use a dynamic path here for yout namespaced document communication instad of "doc-[digit]"
+    this.socket = io('ws://localhost:3000/doc-99') 
       // get the current document and its version
       .on('init', data => this.onInit(data))
       // send all updates to the collaboration extension
