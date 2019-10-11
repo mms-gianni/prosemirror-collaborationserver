@@ -10,6 +10,7 @@
     "npm": "6.x"
   },
   "dependencies": {
+    "mongoose": "^5.7.4",
     "prosemirror-model": "^1.7.2",
     "prosemirror-transform": "^1.1.4",
     "socket.io": "^2.2.0"
