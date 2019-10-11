@@ -7,6 +7,7 @@ let defaultData = {
   "version": 0,
   "doc": { "type": "doc", "content": [{ "type": "paragraph", "content":[{ "type": "text", "text": "Let's start collaborating. Yeah!" }] }] }
 }
+let mongodb_uri = process.env.MONGODB_URI || false
 
 const config = {
 	"port": port,
@@ -14,6 +15,7 @@ const config = {
 	"maxStoredSteps": maxStoredSteps,
 	"defaultData": defaultData,
 	'allowedOrigins': allowedOrigins,
+	'mongodb_uri': mongodb_uri,
 }
 
 module.exports = config;
