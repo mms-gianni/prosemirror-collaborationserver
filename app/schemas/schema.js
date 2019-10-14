@@ -59,6 +59,15 @@ const schema = {
           }
         }
       ]
+    },
+    "blockquote": {
+      "content": "block+",
+      "group": "block",
+      "parseDOM": [
+        {
+          "tag": "blockquote"
+        }
+      ]
     }
   },
   "marks": {
