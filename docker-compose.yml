@@ -11,6 +11,8 @@ services:
       container_name: tiptapsocket
       image: node:12.10-alpine
       command: npm run start-dev
+      environment:
+        - MONGODB_URI=${MONGODB_URI}
       working_dir: /app
       volumes:
         - ./:/app
@@ -25,9 +27,14 @@ services:
       container_name: mongo
       image: mongo:latest
       command: mongod
+      environment:
+        - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+        - MONGO_INITDB_ROOT_PASSWORD=secret
+        - MONGO_INITDB_DATABASE=tiptap_collabdb
       ports:
         - "${MONGODB_PORT}:27017"
       volumes:
         - ${DATA_PATH_HOST}/mongo:/data/db
+        - .docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       networks:
         - backend

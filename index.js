@@ -1,6 +1,8 @@
 
 const io = require("socket.io");
 var config = require('./config.js')
+var db = require('./db.js')
+
 
 var events = require('./app/events/events.js')
 const server = io.listen(config.port);
