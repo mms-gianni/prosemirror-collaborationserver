@@ -94,6 +94,32 @@ const schema = {
           "style": "font-style=italic"
         }
       ]
+    },
+    "underline": {
+      "parseDOM": [
+        {
+          "tag": "u"
+        },
+        {
+          "tag": "em"
+        },
+        {
+          "style": "text-decoration: underline"
+        }
+      ]
+    },
+    "strike": {
+      "parseDOM": [
+        {
+          "tag": "s"
+        },
+        {
+          "tag": "em"
+        },
+        {
+          "style": "text-decoration: line-through;"
+        }
+      ]
     }
   }
 }
