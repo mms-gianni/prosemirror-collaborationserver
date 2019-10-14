@@ -30,9 +30,11 @@ services:
       environment:
         - MONGO_INITDB_ROOT_USERNAME=mongoadmin
         - MONGO_INITDB_ROOT_PASSWORD=secret
+        - MONGO_INITDB_DATABASE=tiptap_collabdb
       ports:
         - "${MONGODB_PORT}:27017"
       volumes:
         - ${DATA_PATH_HOST}/mongo:/data/db
+        - .docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       networks:
         - backend
