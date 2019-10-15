@@ -1,21 +1,19 @@
 
-# Tiptap Collaboration Socket Server
+# Prosemirror Collaboration Socket Server
 
-This socket server manages your collaboration communication between your editors participants. With the Participants tiptap plugin it also shows a particpants list and your participants position.
-It handles multiple documents in parallel and shows also your participants position. It's all ready to run in a Docker instance. 
+This socket server manages your collaboration communication between your editors participants. 
 
+It handles multiple documents in parallel and shows also your participants position. It's all ready to run in a Docker instance or Heroku.
 
-![screencapture](https://github.com/mms-gianni/tiptap-collaborationserver/raw/master/doc/tiptap_big.gif "Logo Title Text 1")
+An exampleimplementation with vue.js and tiptap can be found here: 
+https://tiptap-collaboration-demo.netlify.com/ 
+
+![screencapture](https://github.com/mms-gianni/prosemirror-collaborationserver/raw/master/doc/tiptap_big.gif "Logo Title Text 1")
 
 See full video here : https://www.youtube.com/watch?v=wNdEUkifCao 
 
 ## Requirements  
-- Tiptap rich texteditor (https://tiptap.scrumpy.io)
-- Tiptap collaboration module (https://tiptap.scrumpy.io/collaboration)
-- Tiptap participants module (to be released soon)
-
-## Versioning
-The Versioning follows tiptap release versions. 
+- Docker
 
 ## Document
 Every Document has his own Socket.io namespace.
