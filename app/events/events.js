@@ -12,6 +12,14 @@ var events = function(socket) {
     var nspName = socket.nsp.name
     //console.log("Namespace: "+nspName)
 
+    // Join a cursor room to broadcast without your self
+    socket.join("cursor", () => {
+        let rooms = Object.keys(socket.rooms);
+        console.log(rooms); 
+        const cursorDecorations = DecorationsController.getDecoration(nspName)
+        socket.emit('cursorupdate', cursorDecorations)
+    });
+
     socket.on('update', async ({ version, clientID, steps, cursor}) => {
         var storedData = DocController.getDoc(nspName)
        
@@ -68,7 +76,7 @@ var events = function(socket) {
         // delete Cursor, since user is not connected
         const cursorDecorations = DecorationsController.getDecoration(nspName)
         delete cursorDecorations[socket.id] 
-        socket.nsp.emit('cursorupdate', cursorDecorations) 
+        socket.to('cursor').emit('cursorupdate', cursorDecorations) 
         DecorationsController.storeDecoration(cursorDecorations, nspName)
 
         return
@@ -80,7 +88,7 @@ var events = function(socket) {
         const cursorDecorations = DecorationsController.getDecoration(nspName)
         cursorDecorations[socket.id] = participant
         cursorDecorations[socket.id]['clientID'] = socket.id
-        socket.nsp.emit('cursorupdate', cursorDecorations)
+        socket.to('cursor').emit('cursorupdate', cursorDecorations)
         DecorationsController.storeDecoration(cursorDecorations, nspName)
 
         return
