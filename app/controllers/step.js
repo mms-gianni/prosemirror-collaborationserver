@@ -2,7 +2,7 @@ const fs = require('fs')
 const config = require('../../config.js')
 
 exports.getSteps = function (version, docName) {
-  console.log("getSteps:"+docName)
+  //console.log("getSteps:"+docName)
   try {
     const steps = JSON.parse(fs.readFileSync(config.docPath+docName+"-steps.json", 'utf8'))
     return steps.filter(step => step.version > version)
@@ -12,7 +12,7 @@ exports.getSteps = function (version, docName) {
 }
 
 exports.storeSteps = function ({steps, version}, docName) {
-  console.log("storeSteps:"+docName)
+  //console.log("storeSteps:"+docName)
   var oldData = []
 
   try {

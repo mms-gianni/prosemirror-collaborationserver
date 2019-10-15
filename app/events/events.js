@@ -10,7 +10,7 @@ const config = require('../../config.js')
 
 var events = function(socket) {
     var nspName = socket.nsp.name
-    console.log("Namespace: "+nspName)
+    //console.log("Namespace: "+nspName)
 
     socket.on('update', async ({ version, clientID, steps, cursor}) => {
         var storedData = DocController.getDoc(nspName)
@@ -62,7 +62,7 @@ var events = function(socket) {
     })
 
     socket.on('disconnect', () => {
-        console.log('main.disconnect')
+        //console.log('main.disconnect')
         socket.nsp.emit('getCount', socket.server.engine.clientsCount) 
 
         // delete Cursor, since user is not connected
@@ -76,7 +76,7 @@ var events = function(socket) {
 
     // Update collaborators about your cursor postition
     socket.on('cursorchange', async (participant) => {
-        console.log('main.cursorchange')
+        //console.log('main.cursorchange')
         const cursorDecorations = DecorationsController.getDecoration(nspName)
         cursorDecorations[socket.id] = participant
         cursorDecorations[socket.id]['clientID'] = socket.id
