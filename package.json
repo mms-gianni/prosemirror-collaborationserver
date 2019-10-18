@@ -16,11 +16,11 @@
   },
   "devDependencies": {
     "eslint": "^6.3.0",
-    "nodemon": "^1.19.2"
+    "nodemon": "^1.19.4"
   },
   "scripts": {
     "start": "node --harmony index.js",
-    "start-dev": "/app/node_modules/.bin/nodemon /app/index.js",
+    "start-dev": "node_modules/.bin/nodemon index.js",
     "lint": "eslint --ext js ./",
     "lint-fix": "eslint --fix --ext js ./"
   }
