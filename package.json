@@ -12,6 +12,7 @@
   "dependencies": {
     "prosemirror-model": "^1.7.2",
     "prosemirror-transform": "^1.1.4",
+    "prosemirror-view": "^1.11.7",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
