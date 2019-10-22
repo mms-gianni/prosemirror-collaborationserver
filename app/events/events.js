@@ -12,10 +12,12 @@ var events = function(socket) {
     var nspName = socket.nsp.name
     //console.log("Namespace: "+nspName)
 
-    socket.on('update', async ({ version, clientID, steps, cursor}) => {
+    socket.on('update', async ({ version, clientID, steps, participant}) => {
         var storedData = DocController.getDoc(nspName)
-       
-        const cursorDecorations = {}
+
+        var cursorDecorations = DecorationsController.getDecoration(nspName)
+        cursorDecorations[socket.id] = participant
+        cursorDecorations[socket.id]['clientID'] = socket.id
 
         // version mismatch: the stored version is newer
         // so we send all steps of this version back to the user
@@ -23,7 +25,7 @@ var events = function(socket) {
             socket.emit('update', {
                 version,
                 steps: StepController.getSteps(version, nspName),
-                decorations: cursorDecorations,
+                participants: cursorDecorations,
                 clientID: socket.id
             })
           return
@@ -34,6 +36,16 @@ var events = function(socket) {
         let newSteps = steps.map(step => {
             const newStep = Step.fromJSON(Schema, step)
             newStep.clientID = socket.id
+
+            for (var decoID in cursorDecorations) {
+                var cursor = cursorDecorations[decoID].cursor
+                if (cursor != undefined && cursor > newStep.from ) {
+                    cursorDecorations[decoID].cursor = cursor+newStep.slice.content.size
+                }
+                console.log(newStep.from+' '+newStep.slice.content.size+' '+cursor+' '+cursorDecorations[decoID].cursor)
+            }
+
+
 
             // apply step to document
             let result = newStep.apply(doc)
@@ -49,12 +61,13 @@ var events = function(socket) {
         // store data
         StepController.storeSteps({ version, steps: newSteps }, nspName)
         DocController.storeDoc({ version: newVersion, doc }, nspName)
+        DecorationsController.storeDecoration(cursorDecorations, nspName)
 
         // send update to everyone (me and others)
         socket.nsp.emit('update', {
             version: newVersion,
             steps: StepController.getSteps(version, nspName),
-            decorations: cursorDecorations,
+            participants: cursorDecorations,
             clientID: socket.id
         })
         
