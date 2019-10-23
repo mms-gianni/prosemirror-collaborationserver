@@ -41,8 +41,9 @@ var events = function(socket) {
                 var cursor = cursorDecorations[decoID].cursor
                 if (cursor != undefined && cursor > newStep.from ) {
                     cursorDecorations[decoID].cursor = cursor+newStep.slice.content.size
+
+                    //console.log('from:'+newStep.from+' size:'+newStep.slice.content.size+' cursor:'+cursor+' newPos'+cursorDecorations[decoID].cursor)
                 }
-                console.log(newStep.from+' '+newStep.slice.content.size+' '+cursor+' '+cursorDecorations[decoID].cursor)
             }
 
 
@@ -93,7 +94,7 @@ var events = function(socket) {
         const cursorDecorations = DecorationsController.getDecoration(nspName)
         cursorDecorations[socket.id] = participant
         cursorDecorations[socket.id]['clientID'] = socket.id
-        socket.nsp.emit('cursorupdate', cursorDecorations)
+        socket.nsp.emit('cursorupdate', {participants: cursorDecorations})
         DecorationsController.storeDecoration(cursorDecorations, nspName)
 
         return
