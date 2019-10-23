@@ -39,10 +39,13 @@ var events = function(socket) {
 
             for (var decoID in cursorDecorations) {
                 var cursor = cursorDecorations[decoID].cursor
-                if (cursor != undefined && cursor > newStep.from ) {
-                    cursorDecorations[decoID].cursor = cursor+newStep.slice.content.size
+                if (cursor != undefined &&
+                    newStep.slice != undefined &&
+                    cursor > newStep.from
+                    ) {
+                        cursorDecorations[decoID].cursor = cursor+newStep.slice.content.size
 
-                    //console.log('from:'+newStep.from+' size:'+newStep.slice.content.size+' cursor:'+cursor+' newPos'+cursorDecorations[decoID].cursor)
+                        //console.log('from:'+newStep.from+' size:'+newStep.slice.content.size+' cursor:'+cursor+' newPosx'+cursorDecorations[decoID].cursor)
                 }
             }
 
