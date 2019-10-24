@@ -9,8 +9,12 @@ const config = require('../../config.js')
 
 
 var events = function(socket) {
-    var nspName = socket.nsp.name
+    const nspName = socket.nsp.name
     //console.log("Namespace: "+nspName)
+
+    const participantsRoom = nspName+'-participants'
+
+    socket.join(participantsRoom);
 
     socket.on('update', async ({ version, clientID, steps, participant}) => {
         var storedData = DocController.getDoc(nspName)
@@ -86,7 +90,7 @@ var events = function(socket) {
         // delete Cursor, since user is not connected
         const cursorDecorations = DecorationsController.getDecoration(nspName)
         delete cursorDecorations[socket.id] 
-        socket.nsp.emit('cursorupdate', cursorDecorations) 
+        socket.nsp.emit('cursorupdate', {participants: cursorDecorations}) 
         DecorationsController.storeDecoration(cursorDecorations, nspName)
 
         return
@@ -94,6 +98,18 @@ var events = function(socket) {
 
     // Update collaborators about your cursor postition
     socket.on('cursorchange', async (participant) => {
+        //console.log('main.cursorchange')
+        const cursorDecorations = DecorationsController.getDecoration(nspName)
+        cursorDecorations[socket.id] = participant
+        cursorDecorations[socket.id]['clientID'] = socket.id
+        socket.to(participantsRoom).emit('cursorupdate', {participants: cursorDecorations})
+        //socket.nsp.emit('cursorupdate', {participants: cursorDecorations})
+        DecorationsController.storeDecoration(cursorDecorations, nspName)
+
+        return
+    })
+    // Update collaborators about your cursor postition
+    socket.on('init', async (participant) => {
         //console.log('main.cursorchange')
         const cursorDecorations = DecorationsController.getDecoration(nspName)
         cursorDecorations[socket.id] = participant
