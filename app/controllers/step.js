@@ -11,7 +11,7 @@ exports.getSteps = function (version, docName) {
   }
 }
 
-exports.storeSteps = function ({steps, version}, docName) {
+exports.storeSteps = async function ({steps, version}, docName) {
   //console.log("storeSteps:"+docName)
   var oldData = []
 

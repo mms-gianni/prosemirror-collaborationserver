@@ -10,7 +10,7 @@ exports.getDoc = function (docName) {
   }
 }
 
-exports.storeDoc = function(data, docName) {
+exports.storeDoc = async function(data, docName) {
   //console.log("storeDoc: "+docName)
   fs.writeFileSync(config.docPath+docName+"-db.json", JSON.stringify(data, null, 2))
 }

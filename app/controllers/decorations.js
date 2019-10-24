@@ -10,7 +10,7 @@ exports.getDecoration = function (docName) {
   }
 }
 
-exports.storeDecoration = function(data, docName) {
+exports.storeDecoration = async function(data, docName) {
   //console.log("storeDecoration: "+docName)
 
   //console.log(data)
