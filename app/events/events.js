@@ -43,7 +43,8 @@ var events = function(socket) {
                     newStep.slice != undefined &&
                     cursor > newStep.from
                     ) {
-                        cursorDecorations[decoID].cursor = cursor+newStep.slice.content.size
+                        var gap = newStep.from-newStep.to
+                        cursorDecorations[decoID].cursor = cursor+gap+newStep.slice.content.size
 
                         //console.log('from:'+newStep.from+' size:'+newStep.slice.content.size+' cursor:'+cursor+' newPosx'+cursorDecorations[decoID].cursor)
                 }
