@@ -42,6 +42,7 @@ var events = function(socket) {
             newStep.clientID = socket.id
 
             for (var decoID in cursorDecorations) {
+                if (socket.id == decoID) { continue; }
                 var cursor = cursorDecorations[decoID].cursor
                 if (cursor != undefined &&
                     newStep.slice != undefined &&
